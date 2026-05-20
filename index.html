@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="ZentraMart - Everything You Need, Delivered Smarter. A premium Indian e-commerce experience."
+    />
+    <title>ZentraMart | Everything You Need, Delivered Smarter.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="nav">
+        <a class="brand" href="#home" aria-label="ZentraMart home">
+          <span class="brand-mark">Z</span>
+          <span><b>ZentraMart</b><small>Delivered smarter</small></span>
+        </a>
+
+        <button class="category-btn" id="categoryBtn">Categories</button>
+        <div class="category-menu" id="categoryMenu"></div>
+
+        <label class="search-wrap" aria-label="Search products">
+          <span>⌕</span>
+          <input id="searchInput" type="search" placeholder="Search iPhone, sneakers, Diwali deals..." />
+          <button id="voiceBtn" title="Voice search UI" type="button">🎙</button>
+          <div class="suggestions" id="suggestions"></div>
+        </label>
+
+        <nav class="nav-actions">
+          <button class="ghost-btn" data-open-auth="login">Login</button>
+          <button class="primary-btn sm" data-open-auth="signup">Sign up</button>
+          <button class="icon-btn" id="wishlistBtn" title="Wishlist">♡<span id="wishCount">0</span></button>
+          <button class="icon-btn" id="cartBtn" title="Cart">🛒<span id="cartCount">0</span></button>
+          <button class="icon-btn" id="themeBtn" title="Toggle dark mode">◐</button>
+        </nav>
+      </header>
+
+      <main id="home">
+        <section class="hero">
+          <div class="hero-content">
+            <p class="eyebrow">Big Billion Zentra Days • Live now</p>
+            <h1>Everything You Need, Delivered Smarter.</h1>
+            <p>
+              Premium phones, fashion, gaming gear, groceries, beauty, and home essentials with
+              intelligent deals, express delivery, and a checkout built for India.
+            </p>
+            <div class="hero-actions">
+              <a class="primary-btn" href="#products">Shop Now</a>
+              <a class="glass-btn" href="#deals">Explore Deals</a>
+              <a class="glass-btn" href="#trending">Trending Products</a>
+            </div>
+            <div class="hero-metrics">
+              <span><b>2.4M+</b> orders today</span>
+              <span><b>10 min</b> express slots</span>
+              <span><b>₹500Cr</b> rewards pool</span>
+            </div>
+          </div>
+          <div class="hero-visual" aria-label="Featured product collage">
+            <div class="deal-card floating">
+              <span>Festival Flash</span>
+              <b>Up to 80% OFF</b>
+              <small id="heroTimer">02:44:19 left</small>
+            </div>
+            <img
+              src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80"
+              alt="Premium smartphone"
+            />
+            <div class="orbit one"></div>
+            <div class="orbit two"></div>
+          </div>
+        </section>
+
+        <section class="quick-strip">
+          <span>⚡ Same-day delivery</span>
+          <span>💳 UPI, cards, COD</span>
+          <span>🎁 Scratch rewards</span>
+          <span>🛡 ZentraProtect warranty</span>
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Shop by mood</p>
+              <h2>Categories</h2>
+            </div>
+            <button class="ghost-btn">View all</button>
+          </div>
+          <div class="category-grid" id="categoryGrid"></div>
+        </section>
+
+        <section class="section deals" id="deals">
+          <div class="deal-banner">
+            <div>
+              <p class="eyebrow">Big Billion Zentra Days</p>
+              <h2>Festival prices, premium experience.</h2>
+              <p>Cashback drops, exchange boosts, no-cost EMI, and surprise coupons every hour.</p>
+            </div>
+            <div class="countdown" id="countdown"></div>
+          </div>
+          <div class="promo-grid">
+            <article><b>Flash Sale</b><span>Limited-time lightning deals</span></article>
+            <article><b>Under ₹999</b><span>Smart budget picks</span></article>
+            <article><b>Premium Collection</b><span>Luxury tech and fashion</span></article>
+            <article><b>Complete Your Setup</b><span>AI bundle suggestions</span></article>
+          </div>
+        </section>
+
+        <section class="section product-zone" id="products">
+          <aside class="filters">
+            <h3>Smart Filters</h3>
+            <label>Price up to <b id="priceValue">₹2,00,000</b></label>
+            <input type="range" id="priceFilter" min="999" max="200000" value="200000" />
+            <label>Minimum rating</label>
+            <select id="ratingFilter">
+              <option value="0">Any rating</option>
+              <option value="4">4★ and above</option>
+              <option value="4.5">4.5★ premium</option>
+            </select>
+            <label>Brand</label>
+            <select id="brandFilter">
+              <option value="all">All brands</option>
+            </select>
+            <button class="primary-btn" id="clearFilters">Reset</button>
+          </aside>
+
+          <div class="products-main">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow" id="resultText">AI recommended for you</p>
+                <h2>Featured Products</h2>
+              </div>
+              <button class="ghost-btn" id="spinBtn">Spin & Win</button>
+            </div>
+            <div class="products-grid" id="productsGrid"></div>
+          </div>
+        </section>
+
+        <section class="section" id="trending">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Trending now</p>
+              <h2>Top brands and hot picks</h2>
+            </div>
+          </div>
+          <div class="brand-row" id="brandRow"></div>
+          <div class="reward-panel">
+            <div>
+              <p class="eyebrow">Zentra Rewards</p>
+              <h2>Daily check-in, scratch cards, loyalty points.</h2>
+              <p>Demo reward wallet: 4,280 ZentraCoins, 3 coupons, and a Rs.250 cashback drop.</p>
+            </div>
+            <button class="primary-btn" id="scratchBtn">Scratch Card</button>
+          </div>
+        </section>
+
+        <section class="section split">
+          <div class="panel">
+            <p class="eyebrow">Seller Hub</p>
+            <h2>Grow your store with ZentraMart.</h2>
+            <p>Inventory, promotions, analytics, payouts, and conversion insights in one dashboard.</p>
+            <button class="primary-btn" data-route="admin">Open Seller Dashboard</button>
+          </div>
+          <div class="panel dark-panel">
+            <p class="eyebrow">AI Assistant</p>
+            <h2>Ask Zentra anything.</h2>
+            <div class="chat-mini">
+              <span>Find me running shoes under ₹4,000</span>
+              <b>Try Pegasus Lite, ZentraRun X, and AirFlex Pro. Want size 9?</b>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <section class="page hidden" id="accountPage">
+        <div class="page-head">
+          <p class="eyebrow">Your account</p>
+          <h1>Orders, addresses, coupons, and settings</h1>
+        </div>
+        <div class="dashboard-grid">
+          <article><b>My Orders</b><span>3 active orders, 1 arriving today</span></article>
+          <article><b>Wishlist</b><span id="wishSummary">No saved products yet</span></article>
+          <article><b>Saved Addresses</b><span>Home, Work, Other with GPS detection UI</span></article>
+          <article><b>Payment Methods</b><span>UPI, cards, wallet, COD ready</span></article>
+          <article><b>Live Tracking</b><span class="timeline">Packed → Shipped → Out for delivery</span></article>
+          <article><b>Coupons</b><span>ZENTRA250, FLASH10, FESTIVEBANK</span></article>
+        </div>
+      </section>
+
+      <section class="page hidden" id="adminPage">
+        <div class="page-head">
+          <p class="eyebrow">Admin dashboard</p>
+          <h1>Revenue, orders, products, inventory</h1>
+        </div>
+        <div class="admin-grid">
+          <article><small>Revenue</small><b>₹8.42Cr</b><span class="chart"></span></article>
+          <article><small>Orders</small><b>42,810</b><span class="chart alt"></span></article>
+          <article><small>Customers</small><b>1.2M</b><span class="chart"></span></article>
+          <article><small>Inventory alerts</small><b>18 SKUs</b><span class="chart warn"></span></article>
+        </div>
+        <div class="table-card">
+          <h2>Product Management</h2>
+          <table>
+            <thead><tr><th>Product</th><th>Stock</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="adminRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div>
+          <a class="brand" href="#home"><span class="brand-mark">Z</span><span><b>ZentraMart</b><small>Everything smarter</small></span></a>
+          <p>Premium Indian commerce for electronics, fashion, essentials, and delightfully fast delivery.</p>
+        </div>
+        <div><b>Company</b><a>About</a><a>Careers</a><a>Contact</a></div>
+        <div><b>Support</b><a>Help Center</a><a>Terms</a><a>Privacy Policy</a></div>
+        <div><b>Get the app</b><span class="app-pill">Download ZentraMart</span><input placeholder="Newsletter email" /></div>
+      </footer>
+    </div>
+
+    <nav class="mobile-nav">
+      <a href="#home">⌂<span>Home</span></a>
+      <a href="#products">⌕<span>Search</span></a>
+      <button id="mobileCart">🛒<span>Cart</span></button>
+      <button data-route="account">☺<span>Account</span></button>
+    </nav>
+
+    <div class="drawer" id="cartDrawer" aria-hidden="true">
+      <div class="drawer-card">
+        <button class="close" data-close="cartDrawer">×</button>
+        <h2>Your Cart</h2>
+        <div id="cartItems"></div>
+          <div class="coupon-row"><input placeholder="Apply coupon ZENTRA250" /><button>Apply</button></div>
+        <div class="price-box" id="priceBox"></div>
+        <button class="primary-btn full" id="checkoutBtn">Checkout</button>
+      </div>
+    </div>
+
+    <div class="drawer" id="checkoutDrawer" aria-hidden="true">
+      <div class="drawer-card checkout">
+        <button class="close" data-close="checkoutDrawer">×</button>
+        <h2>Checkout</h2>
+        <div class="checkout-steps">
+          <article><b>Address</b><p>Home • Bengaluru 560001</p><button>Use GPS</button></article>
+          <article><b>Delivery</b><p>Same-day, next-day, express shipping</p></article>
+          <article>
+            <b>Payment</b>
+            <div class="payment-grid"><button>UPI</button><button>Card</button><button>Net Banking</button><button>Wallet</button><button>COD</button></div>
+          </article>
+        </div>
+        <button class="primary-btn full" id="placeOrder">Place Order</button>
+      </div>
+    </div>
+
+    <div class="modal" id="productModal" aria-hidden="true"></div>
+    <div class="modal" id="authModal" aria-hidden="true"></div>
+    <div class="toast-stack" id="toasts"></div>
+    <button class="floating-chat" id="chatBtn">AI</button>
+    <button class="hot-deal" id="hotDeal">Hot Deal: Earbuds 67% off</button>
+    <script src="app.js"></script>
+  </body>
+</html>
