@@ -1,0 +1,25 @@
+{% extends "quiz/base.html" %}
+
+{% block title %}Result | QuizMaster{% endblock %}
+
+{% block content %}
+  <section class="result-hero">
+    <div class="score-ring">
+      <span>{{ percentage }}%</span>
+    </div>
+    <div>
+      <p class="eyebrow">Final Result</p>
+      <h1>{{ grade }}</h1>
+      <p>You scored <b>{{ score }}</b> out of <b>{{ total }}</b>.</p>
+      <div class="summary-grid">
+        <article><span>Correct</span><b>{{ correct_count }}</b></article>
+        <article><span>Incorrect</span><b>{{ incorrect_count }}</b></article>
+        <article><span>Total</span><b>{{ total }}</b></article>
+      </div>
+      <div class="actions">
+        <a class="primary-btn" href="{% url 'quiz:start' %}" data-clear-progress>Restart Quiz</a>
+        <a class="ghost-btn" href="{% url 'quiz:review' %}">Review Answers</a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

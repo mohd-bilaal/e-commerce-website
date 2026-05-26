@@ -1,0 +1,39 @@
+{% extends "quiz/base.html" %}
+
+{% block title %}Quiz | QuizMaster{% endblock %}
+
+{% block content %}
+  <section class="quiz-shell" data-duration="{{ duration_seconds }}">
+    <div class="quiz-status">
+      <div>
+        <p class="eyebrow">Quiz in progress</p>
+        <h1>Answer carefully.</h1>
+      </div>
+      <div class="timer" id="timer">30:00</div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="questionCounter">Question 1 of 100</span>
+        <span id="answeredCounter">0 answered</span>
+      </div>
+      <div class="progress-track"><div id="progressBar"></div></div>
+    </div>
+
+    <article class="question-card">
+      <div id="loadingBox" class="loading">Loading questions...</div>
+      <div id="quizBox" class="hidden">
+        <p class="category-pill" id="questionCategory">General Knowledge</p>
+        <h2 id="questionText"></h2>
+        <div class="options" id="optionsList"></div>
+      </div>
+    </article>
+
+    <div class="quiz-actions">
+      <button class="ghost-btn" id="prevBtn">Previous</button>
+      <button class="ghost-btn" id="clearSavedBtn">Clear Saved Progress</button>
+      <button class="primary-btn" id="nextBtn">Next</button>
+      <button class="danger-btn" id="submitBtn">Submit Quiz</button>
+    </div>
+  </section>
+{% endblock %}

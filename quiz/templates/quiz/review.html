@@ -1,0 +1,31 @@
+{% extends "quiz/base.html" %}
+
+{% block title %}Review | QuizMaster{% endblock %}
+
+{% block content %}
+  <section class="review-page">
+    <div class="page-head">
+      <p class="eyebrow">Answer Review</p>
+      <h1>Correct and incorrect answers</h1>
+      <p>Your score: {{ score }}/{{ total }} - {{ percentage }}%</p>
+      <a class="primary-btn" href="{% url 'quiz:start' %}" data-clear-progress>Restart Quiz</a>
+    </div>
+
+    <div class="review-list">
+      {% for row in review_rows %}
+        <article class="review-card {% if row.is_correct %}correct{% else %}wrong{% endif %}">
+          <div class="review-top">
+            <span>Question {{ forloop.counter }}</span>
+            <b>{% if row.is_correct %}Correct{% else %}Incorrect{% endif %}</b>
+          </div>
+          <h2>{{ row.question }}</h2>
+          <p><b>Your answer:</b> {{ row.selected_text }}</p>
+          <p><b>Correct answer:</b> {{ row.correct_text }}</p>
+          {% if row.explanation %}
+            <p class="explanation">{{ row.explanation }}</p>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

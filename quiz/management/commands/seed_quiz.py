@@ -1,0 +1,136 @@
+from django.core.management.base import BaseCommand
+
+from quiz.models import Question
+
+
+QUESTIONS = [
+    ("What is the capital of India?", "Mumbai", "New Delhi", "Kolkata", "Chennai", "B", "Geography", "New Delhi is the capital of India."),
+    ("Which planet is known as the Red Planet?", "Venus", "Jupiter", "Mars", "Saturn", "C", "Science", "Mars appears red because of iron oxide on its surface."),
+    ("Who wrote the national anthem of India?", "Bankim Chandra Chatterjee", "Rabindranath Tagore", "Sarojini Naidu", "Mahatma Gandhi", "B", "History", "Rabindranath Tagore wrote Jana Gana Mana."),
+    ("What is the largest ocean on Earth?", "Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean", "D", "Geography", "The Pacific Ocean is the largest ocean."),
+    ("Which gas do plants absorb during photosynthesis?", "Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen", "B", "Science", "Plants absorb carbon dioxide and release oxygen."),
+    ("What is the value of 12 x 8?", "84", "88", "96", "108", "C", "Mathematics", "12 multiplied by 8 is 96."),
+    ("Who is known as the Father of the Nation in India?", "Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "B. R. Ambedkar", "B", "History", "Mahatma Gandhi is widely called the Father of the Nation."),
+    ("Which is the smallest prime number?", "0", "1", "2", "3", "C", "Mathematics", "2 is the smallest and only even prime number."),
+    ("Which device is used to measure temperature?", "Barometer", "Thermometer", "Hygrometer", "Voltmeter", "B", "Science", "A thermometer measures temperature."),
+    ("HTML stands for what?", "HyperText Markup Language", "HighText Machine Language", "HyperTool Multi Language", "HomeText Markup Logic", "A", "Computers", "HTML means HyperText Markup Language."),
+    ("CSS is mainly used for what?", "Database storage", "Web page styling", "Server routing", "Password hashing", "B", "Computers", "CSS controls web page appearance."),
+    ("Which language is Django written in?", "Java", "Python", "PHP", "Ruby", "B", "Computers", "Django is a Python web framework."),
+    ("What does CPU stand for?", "Central Processing Unit", "Computer Personal Unit", "Central Print Utility", "Core Processing User", "A", "Computers", "CPU means Central Processing Unit."),
+    ("Which data structure uses FIFO?", "Stack", "Queue", "Tree", "Graph", "B", "Computers", "A queue follows First In, First Out."),
+    ("Which year did India gain independence?", "1942", "1947", "1950", "1962", "B", "History", "India became independent on 15 August 1947."),
+    ("Who was the first Prime Minister of India?", "Indira Gandhi", "Lal Bahadur Shastri", "Jawaharlal Nehru", "Rajendra Prasad", "C", "History", "Jawaharlal Nehru was India's first Prime Minister."),
+    ("Which is the national animal of India?", "Lion", "Tiger", "Elephant", "Peacock", "B", "General Knowledge", "The tiger is India's national animal."),
+    ("Which is the national bird of India?", "Sparrow", "Parrot", "Peacock", "Eagle", "C", "General Knowledge", "The peacock is India's national bird."),
+    ("Which river is known as the Ganga?", "Yamuna", "Ganges", "Narmada", "Godavari", "B", "Geography", "The Ganges is also called the Ganga."),
+    ("Which is the longest river in the world?", "Amazon", "Nile", "Ganga", "Yangtze", "B", "Geography", "The Nile is commonly listed as the longest river."),
+    ("What is H2O commonly known as?", "Salt", "Water", "Oxygen", "Hydrogen", "B", "Science", "H2O is water."),
+    ("How many bones are there in an adult human body?", "206", "210", "198", "250", "A", "Science", "An adult human body has 206 bones."),
+    ("Which organ pumps blood in the body?", "Liver", "Brain", "Heart", "Lungs", "C", "Science", "The heart pumps blood."),
+    ("Which vitamin is produced by sunlight exposure?", "Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D", "D", "Science", "Sunlight helps the body produce Vitamin D."),
+    ("What is the square root of 144?", "10", "11", "12", "14", "C", "Mathematics", "12 x 12 equals 144."),
+    ("What is 15% of 200?", "15", "20", "30", "40", "C", "Mathematics", "15 percent of 200 is 30."),
+    ("What is the next number: 2, 4, 8, 16, ?", "18", "24", "30", "32", "D", "Mathematics", "Each number is doubled."),
+    ("How many sides does a hexagon have?", "5", "6", "7", "8", "B", "Mathematics", "A hexagon has six sides."),
+    ("Which is the largest continent?", "Africa", "Asia", "Europe", "Australia", "B", "Geography", "Asia is the largest continent."),
+    ("Which country is known as the Land of the Rising Sun?", "India", "Japan", "China", "Thailand", "B", "Geography", "Japan is called the Land of the Rising Sun."),
+    ("Which currency is used in Japan?", "Yuan", "Won", "Yen", "Dollar", "C", "Geography", "Japan uses the yen."),
+    ("Mount Everest lies in which mountain range?", "Andes", "Alps", "Himalayas", "Rockies", "C", "Geography", "Everest is in the Himalayas."),
+    ("Who invented the light bulb commercially?", "Isaac Newton", "Thomas Edison", "Albert Einstein", "Nikola Tesla", "B", "Science", "Thomas Edison is credited with the practical commercial light bulb."),
+    ("What force pulls objects toward Earth?", "Magnetism", "Gravity", "Friction", "Tension", "B", "Science", "Gravity pulls objects toward Earth."),
+    ("What is the chemical symbol for gold?", "Go", "Gd", "Au", "Ag", "C", "Science", "Gold's symbol is Au."),
+    ("Which metal is liquid at room temperature?", "Iron", "Mercury", "Copper", "Aluminium", "B", "Science", "Mercury is liquid at room temperature."),
+    ("Who wrote Romeo and Juliet?", "Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain", "B", "Literature", "Shakespeare wrote Romeo and Juliet."),
+    ("Who wrote Harry Potter?", "J. K. Rowling", "Agatha Christie", "George Orwell", "R. K. Narayan", "A", "Literature", "J. K. Rowling wrote Harry Potter."),
+    ("Who wrote The Guide?", "R. K. Narayan", "Ruskin Bond", "Premchand", "Mulk Raj Anand", "A", "Literature", "R. K. Narayan wrote The Guide."),
+    ("Which word is a synonym of happy?", "Sad", "Joyful", "Angry", "Tired", "B", "English", "Joyful means happy."),
+    ("Which word is an antonym of ancient?", "Old", "Modern", "Historic", "Past", "B", "English", "Modern is the opposite of ancient."),
+    ("Which punctuation ends a question?", "Comma", "Full stop", "Question mark", "Colon", "C", "English", "A question mark ends a question."),
+    ("Which is a noun?", "Run", "Beautiful", "City", "Quickly", "C", "English", "City is a noun."),
+    ("Which is the past tense of go?", "Goed", "Gone", "Went", "Going", "C", "English", "Went is the simple past tense of go."),
+    ("How many players are there in a cricket team on field?", "9", "10", "11", "12", "C", "Sports", "A cricket team has 11 players."),
+    ("Which sport uses a shuttlecock?", "Tennis", "Badminton", "Squash", "Hockey", "B", "Sports", "Badminton uses a shuttlecock."),
+    ("How many rings are there in the Olympic symbol?", "4", "5", "6", "7", "B", "Sports", "The Olympic symbol has five rings."),
+    ("Which country hosted the 2011 Cricket World Cup final?", "India", "Australia", "England", "South Africa", "A", "Sports", "The 2011 final was played in Mumbai, India."),
+    ("In football, how many players are on one team on the field?", "9", "10", "11", "12", "C", "Sports", "A football team has 11 players on the field."),
+    ("Which is the fastest land animal?", "Lion", "Cheetah", "Horse", "Tiger", "B", "General Knowledge", "The cheetah is the fastest land animal."),
+    ("Which is the largest mammal?", "Elephant", "Blue whale", "Giraffe", "Hippopotamus", "B", "General Knowledge", "The blue whale is the largest mammal."),
+    ("Which bird is known for mimicking speech?", "Crow", "Parrot", "Duck", "Penguin", "B", "General Knowledge", "Parrots can mimic speech."),
+    ("Which planet has rings around it?", "Mars", "Earth", "Saturn", "Mercury", "C", "Science", "Saturn is famous for its rings."),
+    ("Which planet is closest to the Sun?", "Venus", "Mercury", "Earth", "Mars", "B", "Science", "Mercury is closest to the Sun."),
+    ("How many days are there in a leap year?", "365", "366", "364", "360", "B", "General Knowledge", "A leap year has 366 days."),
+    ("How many months have 31 days?", "5", "6", "7", "8", "C", "General Knowledge", "Seven months have 31 days."),
+    ("Which is the main source of energy for Earth?", "Moon", "Sun", "Wind", "Coal", "B", "Science", "The Sun is Earth's main energy source."),
+    ("What is the boiling point of water at sea level?", "50 C", "75 C", "100 C", "150 C", "C", "Science", "Water boils at 100 C at sea level."),
+    ("What is the freezing point of water?", "0 C", "10 C", "32 C", "100 C", "A", "Science", "Water freezes at 0 C."),
+    ("Which part of a plant makes food?", "Root", "Stem", "Leaf", "Flower", "C", "Science", "Leaves make food through photosynthesis."),
+    ("What does RAM stand for?", "Read Access Memory", "Random Access Memory", "Run Active Memory", "Rapid App Memory", "B", "Computers", "RAM means Random Access Memory."),
+    ("Which is an operating system?", "Python", "Windows", "HTML", "Google", "B", "Computers", "Windows is an operating system."),
+    ("Which is a web browser?", "Chrome", "Excel", "Photoshop", "Django", "A", "Computers", "Chrome is a web browser."),
+    ("What does URL stand for?", "Uniform Resource Locator", "Universal Record Link", "User Route Locator", "Uniform Read Line", "A", "Computers", "URL means Uniform Resource Locator."),
+    ("Which symbol starts an email address domain?", "#", "@", "$", "&", "B", "Computers", "The @ symbol separates name and domain in email."),
+    ("Which database is default in a new Django project?", "MySQL", "PostgreSQL", "SQLite", "MongoDB", "C", "Computers", "Django uses SQLite by default."),
+    ("Which command starts Django development server?", "python manage.py runserver", "django start", "python server.py", "manage startapp", "A", "Computers", "runserver starts Django's dev server."),
+    ("Which file stores Django project settings?", "views.py", "settings.py", "models.py", "admin.py", "B", "Computers", "Django settings are stored in settings.py."),
+    ("Which Django file defines database tables?", "models.py", "urls.py", "tests.py", "apps.py", "A", "Computers", "Django models define database structure."),
+    ("Which Django file maps URLs to views?", "admin.py", "urls.py", "forms.py", "wsgi.py", "B", "Computers", "urls.py maps routes."),
+    ("Which tag loads static files in Django templates?", "{% static %}", "{% load static %}", "{% url static %}", "{% include static %}", "B", "Computers", "Use {% load static %} before static file references."),
+    ("What is 7 x 9?", "54", "63", "72", "81", "B", "Mathematics", "7 multiplied by 9 is 63."),
+    ("What is 1000 divided by 10?", "10", "100", "1000", "1", "B", "Mathematics", "1000 divided by 10 equals 100."),
+    ("What is the perimeter of a square with side 5?", "10", "20", "25", "30", "B", "Mathematics", "Perimeter is 4 x side, so 20."),
+    ("What is the area of a rectangle 4 by 6?", "10", "20", "24", "30", "C", "Mathematics", "Area is length x breadth, 4 x 6 = 24."),
+    ("What is 3 cubed?", "6", "9", "18", "27", "D", "Mathematics", "3 cubed is 27."),
+    ("Which is an even number?", "13", "17", "22", "31", "C", "Mathematics", "22 is divisible by 2."),
+    ("Which number is divisible by 5?", "42", "53", "70", "81", "C", "Mathematics", "Numbers ending in 0 or 5 are divisible by 5."),
+    ("What is the Roman numeral for 10?", "V", "X", "L", "C", "B", "Mathematics", "X represents 10."),
+    ("Who was the first President of India?", "Rajendra Prasad", "Zakir Husain", "V. V. Giri", "A. P. J. Abdul Kalam", "A", "History", "Dr. Rajendra Prasad was the first President of India."),
+    ("Who built the Taj Mahal?", "Akbar", "Shah Jahan", "Aurangzeb", "Babur", "B", "History", "Shah Jahan built the Taj Mahal."),
+    ("Where is the Taj Mahal located?", "Delhi", "Jaipur", "Agra", "Lucknow", "C", "History", "The Taj Mahal is in Agra."),
+    ("Who discovered sea route to India in 1498?", "Columbus", "Vasco da Gama", "Marco Polo", "Magellan", "B", "History", "Vasco da Gama reached India by sea in 1498."),
+    ("Which movement was launched in 1942 in India?", "Non-Cooperation", "Quit India", "Civil Disobedience", "Swadeshi", "B", "History", "The Quit India Movement began in 1942."),
+    ("Which city is called the Pink City?", "Udaipur", "Jaipur", "Jodhpur", "Bhopal", "B", "Geography", "Jaipur is called the Pink City."),
+    ("Which Indian state is known as God's Own Country?", "Goa", "Kerala", "Sikkim", "Assam", "B", "Geography", "Kerala is known as God's Own Country."),
+    ("Which is the largest state in India by area?", "Maharashtra", "Madhya Pradesh", "Rajasthan", "Uttar Pradesh", "C", "Geography", "Rajasthan is India's largest state by area."),
+    ("Which Indian city is known as Silicon Valley of India?", "Hyderabad", "Pune", "Bengaluru", "Chennai", "C", "Geography", "Bengaluru is known as India's Silicon Valley."),
+    ("Which is the southernmost state of India?", "Tamil Nadu", "Kerala", "Karnataka", "Andhra Pradesh", "A", "Geography", "Tamil Nadu is the southernmost state on mainland India."),
+    ("Which protocol is used for secure websites?", "HTTP", "FTP", "HTTPS", "SMTP", "C", "Computers", "HTTPS is secure HTTP."),
+    ("Which is a Python web framework?", "Laravel", "Django", "React", "Angular", "B", "Computers", "Django is a Python web framework."),
+    ("Which keyword defines a function in Python?", "func", "define", "def", "function", "C", "Computers", "Python uses def to define functions."),
+    ("Which collection is immutable in Python?", "List", "Set", "Dictionary", "Tuple", "D", "Computers", "A tuple is immutable."),
+    ("Which of these is a JavaScript framework/library?", "React", "Django", "Flask", "SQLite", "A", "Computers", "React is a JavaScript library."),
+    ("Which company created Windows?", "Apple", "Microsoft", "Google", "IBM", "B", "Computers", "Microsoft created Windows."),
+    ("Which is used to style web pages?", "HTML", "CSS", "SQL", "Python", "B", "Computers", "CSS styles web pages."),
+    ("Which tag is used for a hyperlink in HTML?", "p", "a", "div", "img", "B", "Computers", "The a tag creates hyperlinks."),
+    ("Which SQL command retrieves data?", "INSERT", "DELETE", "SELECT", "UPDATE", "C", "Computers", "SELECT retrieves data."),
+    ("Which keyboard shortcut commonly copies text?", "Ctrl + C", "Ctrl + V", "Ctrl + X", "Ctrl + Z", "A", "Computers", "Ctrl + C copies selected content."),
+    ("Which Indian festival is called the festival of lights?", "Holi", "Diwali", "Eid", "Pongal", "B", "General Knowledge", "Diwali is the festival of lights."),
+]
+
+
+class Command(BaseCommand):
+    help = "Seed the database with 100 MCQ questions."
+
+    def handle(self, *args, **options):
+        created = 0
+        updated = 0
+
+        for text, a, b, c, d, correct, category, explanation in QUESTIONS:
+            _, was_created = Question.objects.update_or_create(
+                text=text,
+                defaults={
+                    "option_a": a,
+                    "option_b": b,
+                    "option_c": c,
+                    "option_d": d,
+                    "correct_option": correct,
+                    "category": category,
+                    "explanation": explanation,
+                    "is_active": True,
+                },
+            )
+            if was_created:
+                created += 1
+            else:
+                updated += 1
+
+        self.stdout.write(self.style.SUCCESS(f"Seed complete: {created} created, {updated} updated."))

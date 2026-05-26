@@ -1,0 +1,43 @@
+{% extends "quiz/base.html" %}
+
+{% block title %}Start Quiz | QuizMaster{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Online MCQ Test</p>
+      <h1>Take a clean, timed quiz with 100 questions.</h1>
+      <p>
+        Questions are randomized, options are shuffled, progress is saved in your browser,
+        and your final score includes a full answer review.
+      </p>
+      <div class="actions">
+        <a class="primary-btn" href="{% url 'quiz:quiz' %}" data-clear-progress>Start Quiz</a>
+        <a class="ghost-btn" href="/admin/">Manage Questions</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="stat">
+        <span>Total Questions</span>
+        <b>{{ total_questions }}</b>
+      </div>
+      <div class="stat">
+        <span>Timer</span>
+        <b>{{ duration_minutes }} min</b>
+      </div>
+      <div class="stat">
+        <span>Question Type</span>
+        <b>MCQ</b>
+      </div>
+      <div class="rules">
+        <h2>Rules</h2>
+        <ul>
+          <li>Each question has 4 options.</li>
+          <li>Only one answer is correct.</li>
+          <li>You can move next and previous.</li>
+          <li>Submit anytime to see your score.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+{% endblock %}
